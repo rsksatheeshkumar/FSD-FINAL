@@ -1,13 +1,11 @@
 package com.fsd.taskmanagement.app.model;
 
-import com.sun.javafx.beans.IDProperty;
-
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "USER")
 public class User {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,5 +51,18 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return userId.equals(user.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId);
     }
 }

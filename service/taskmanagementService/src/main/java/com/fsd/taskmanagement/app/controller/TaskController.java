@@ -65,7 +65,7 @@ public class TaskController {
         return savedTask;
     }
 
-        @RequestMapping(value = "/closeTask", method = RequestMethod.PUT )
+    @RequestMapping(value = "/closeTask", method = RequestMethod.PUT )
     public Task closeTask(@RequestBody Task task) {
         if(task != null )
         {
