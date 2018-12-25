@@ -284,9 +284,31 @@ export class AddProjectComponent implements OnInit {
       return 0;         
     })
   }
+}
 
-  getTime(date: Date)
+
+export function projectDateValidator(control: AbstractControl): {[ket:string]: any} | null{
+  const startDateCtrl = control.root.get('startDate')
+  const endDateCtrl =control.root.get('endDate');
+  const isDateRequiredCtrl =control.root.get('isDateRequired');
+  if(isDateRequiredCtrl)
   {
-    return date  != null ? date.getTime() : 0;
+    if(isDateRequiredCtrl.value)
+    {
+      if(!startDateCtrl || !startDateCtrl.value)
+      {
+        return {'startDateRequired':true}
+      }else if(startDateCtrl && startDateCtrl.value && endDateCtrl && endDateCtrl.value)
+      {
+        const startDate = startDateCtrl.value;
+        const endDate = endDateCtrl.value;
+        if(new Date(startDate).getTime() > new Date(endDate).getTime()){
+          return {'startDateInvalid':true}
+        }
+      }
+    }else{
+      return null;      
+    }
   }
+  return null; 
 }
