@@ -1,0 +1,73 @@
+<div>
+    <h4 style="text-align: center">View Task</h4>
+</div>
+<section class="search-section">
+        <table class="table">
+                <tr>
+                    <td><strong> task: </strong></td>
+                    <td colspan="2"><input type="text"  [(ngModel)]="taskDesc" ></td>
+                    <td><strong> ParentTask:</strong></td>
+                    <td colspan="2">
+                        <select [(ngModel)]="parentTask" >
+                            <option value='-1'>&nbsp;</option>
+                            <option *ngFor="let ptask of allParentTask" >
+                                {{ptask.parentTask}}
+                            </option>
+                            </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Priority From:</strong></td>
+                    <td><input type="text"  [(ngModel)]="priorityFrom" ></td>
+                    <td><strong>Priority To :</strong></td>
+                    <td><input type="text" [(ngModel)]="priorityTo"></td>
+                    <td><strong>Start Date:</strong></td>
+                    <td><input type="date" [(ngModel)]="startDate"></td>
+                    <td><strong>End Date:</strong></td>
+                    <td><input type="date" [(ngModel)]="endDate"></td>
+                </tr>
+            </table> 
+</section>
+<div class="center">
+    <h4 style="text-align: center">Search Result</h4>
+</div>
+
+<section style="background-color: #e3e3e3;">
+<table class="table">
+  <thead class="thead-dark">
+  <tr>
+      <th>Task</th>
+      <th>Parent</th>
+      <th>Priority</th>
+      <th>Start Date</th>
+      <th>End Date</th>
+      <th></th>
+      <th></th>
+  </tr>
+</thead>
+<tr *ngFor="let task of allTasks | taskSearch :taskDesc :parentTask :priorityFrom :priorityTo :startDate :endDate">
+  <td >{{task.task}} </td>
+
+  <ng-container *ngIf="task.parentTask != null else elseTemplate" filter >
+      <td >{{task.parentTask.parentTask}} </td>
+  </ng-container>
+  <ng-template #elseTemplate>
+      <td >This Task Has NO Parent</td>
+  </ng-template>
+
+  <td *ngelse>{{task.parentTask.task}} </td>
+  <td >{{task.priority}} </td>
+  <td >{{task.startDate}} </td>
+  <td >{{task.endDate}} </td>
+  <td ><input class="btn btn-primary" type="button" [routerLink]="['/editTask',task.taskId]"  value="Edit Task" /></td> 
+
+  <ng-container *ngIf="task.endDate != null else elseEndDateTemplate">
+        <td >&nbsp;</td>
+    </ng-container>
+    <ng-template #elseEndDateTemplate>
+         <td ><input class="btn btn-warning" type="button" (click)="endTask(task)" value="End Task" /></td>  
+    </ng-template>
+  
+</tr>  
+</table>
+</section>

@@ -1,0 +1,61 @@
+
+    <form [formGroup]="editTaskForm" (ngSubmit)="updateTask()">
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <h3 class="text-center">Update Task</h3>
+            <table class="table">          
+          <tr>
+            <td>Task</td>
+            <td><input class="form-control" type="text" formControlName="task"  [ngClass]="{'is-invalid': submitted && editTaskForm.get('task').errors }" />
+              <span *ngIf="submitted && editTaskForm.get('task').errors" class="invalid-feedback">
+                <span *ngIf="editTaskForm.get('task').errors.required">
+                  Task name is required 
+                </span>
+              </span>
+            </td>
+          </tr> 
+          <tr>
+              <td>Priority</td>
+              <td>
+                  <input class="form-control" type="range" min="1" max="30" value="0" class="slider" formControlName="priority" />
+              </td>
+            </tr>
+            <tr>
+              <td>parent Task</td>
+              <td>
+                <select class="form-control" formControlName="parentTaskId" >
+                  <option *ngFor="let ptask of allParentTask" value="{{ptask.parentTaskId}}" >
+                    {{ptask.parentTask}}
+                  </option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>Start Date</td>
+              <td>
+                  <input class="form-control" type="date"  formControlName="startDate"  [ngClass]="{'is-invalid': submitted && editTaskForm.get('startDate').errors }"/>
+                  <span *ngIf="submitted && editTaskForm.get('startDate').errors" class="invalid-feedback">
+                    <span *ngIf="editTaskForm.get('startDate').errors.startDateRequired">
+                      Task startDate  is required 
+                    </span>
+                    <span *ngIf="editTaskForm.get('startDate').errors.startDateInvalid">
+                      Task startDate should not greater than End Date 
+                    </span>
+                  </span>    
+            </td>  
+            </tr>
+            <tr>
+              <td>End Date</td>
+              <td>
+                  <input class="form-control" type="date"  formControlName="endDate" />
+            </td>
+            </tr>       
+          <tr>
+            <td colspan="2"><input class="btn btn-primary" type="submit" value="Update" /></td>
+            <td ><input class="btn btn-warning" type="button" [routerLink]="['/viewTask']"  value="Cancel" /></td> 
+          </tr> 
+        </table>
+        </div>
+        </div>
+      </form>
