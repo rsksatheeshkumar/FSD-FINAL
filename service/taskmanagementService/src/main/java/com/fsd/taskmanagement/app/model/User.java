@@ -2,6 +2,7 @@ package com.fsd.taskmanagement.app.model;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "USER")
@@ -20,6 +21,9 @@ public class User {
 
     @Column(name="LAST_NAME", nullable = false)
     private String lastName;
+
+    @Column(name="IS_DELETED", nullable = false)
+    private Boolean deleted;
 
     public Long getUserId() {
         return userId;
@@ -51,6 +55,14 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public Boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 
     @Override

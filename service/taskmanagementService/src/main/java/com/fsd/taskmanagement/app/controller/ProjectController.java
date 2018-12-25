@@ -21,7 +21,7 @@ public class ProjectController {
     UserService userService;
 
     @RequestMapping(value="/getAllProject",  method = RequestMethod.GET )
-	public List<Project> getAllUser(){
+	public List<Project> getAllProject(){
 		return projectService.findAllProject();
 	}
 
@@ -52,8 +52,9 @@ public class ProjectController {
     }
 
     @RequestMapping(value = "/suspendProject/{projectId}", method = RequestMethod.PUT )
-    public void suspendProject(@PathVariable("projectId") long projectId) {
+    public Project suspendProject(@PathVariable("projectId") long projectId) {
         projectService.suspendProject(projectId);
+        return projectService.findProject(projectId);
     }
 
     @RequestMapping(value = "/deleteProject/{projectId}", method = RequestMethod.DELETE )

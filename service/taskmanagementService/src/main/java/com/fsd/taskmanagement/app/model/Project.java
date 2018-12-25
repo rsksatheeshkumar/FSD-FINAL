@@ -1,10 +1,13 @@
 package com.fsd.taskmanagement.app.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "PROJECT")
@@ -35,6 +38,10 @@ public class Project {
     @OneToOne
     @JoinColumn(name="MANAGER_ID", nullable=true)
     private User manager;
+
+    @OneToMany(mappedBy = "project", fetch=FetchType.EAGER)
+    @JsonManagedReference
+    private Set<Task> tasklist;
 
     public Long getProjectId() {
         return projectId;
@@ -90,6 +97,14 @@ public class Project {
 
     public void setCompleted(Boolean completed) {
         this.completed = completed;
+    }
+
+    public Set<Task> getTasklist() {
+        return tasklist;
+    }
+
+    public void setTasklist(Set<Task> tasklist) {
+        this.tasklist = tasklist;
     }
 
     @Override

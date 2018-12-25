@@ -1,6 +1,8 @@
 package com.fsd.taskmanagement.app.controller;
 
 import com.fsd.taskmanagement.app.model.User;
+import com.fsd.taskmanagement.app.service.ProjectService;
+import com.fsd.taskmanagement.app.service.TaskService;
 import com.fsd.taskmanagement.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -16,7 +18,13 @@ public class UserController {
 	@Autowired
     UserService userService;
 
-	@RequestMapping(value="/getAllUser",  method = RequestMethod.GET )
+    @Autowired
+    ProjectService projectService;
+
+    @Autowired
+    TaskService taskService;
+
+    @RequestMapping(value="/getAllUser",  method = RequestMethod.GET )
 	public List<User> getAllUser(){
 		return userService.findAllUser();
 	}
@@ -46,7 +54,11 @@ public class UserController {
     }
 
     @RequestMapping(value = "/deleteUser/{userId}", method = RequestMethod.DELETE )
-    public void deleteUser(@PathVariable("userId") long userId) {
-        userService.deleteUser(userId);
+    public User deleteUser(@PathVariable("userId") Long userId) {
+	    if(userId != null)
+        {
+            return userService.deleteUser(userId);
+        }
+	    return null;
     }
 }

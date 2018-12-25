@@ -15,7 +15,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "delete User user where user.userId = :userId")
+    @Query(value = "update User user set deleted=1 where user.userId = :userId")
     int deleteUser(@Param("userId") Long userId);
 
 }

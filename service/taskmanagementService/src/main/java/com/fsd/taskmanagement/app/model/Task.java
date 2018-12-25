@@ -1,5 +1,8 @@
 package com.fsd.taskmanagement.app.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.hibernate.annotations.Fetch;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -29,6 +32,32 @@ public class Task {
     @OneToOne
     @JoinColumn(name="PARENT_ID", nullable=true)
     private ParentTask parentTask;
+
+    @ManyToOne
+    @JoinColumn(name="USER_ID", nullable=true)
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name="PROJECT_ID", nullable=true )
+    @JsonBackReference
+    private Project project;
+
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
 
     @Transient
     private Long parentTaskId;

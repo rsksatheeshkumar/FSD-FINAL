@@ -39,13 +39,6 @@ public class TaskController {
 			{
                 if(task.getTaskId() == null && !task.isparentTask())
                 {
-                    if(task.getParentTaskId()!= null)
-                    {
-                        ParentTask parentTask = taskService.findParentTask(task.getParentTaskId());
-                        if (parentTask != null) {
-                            task.setParentTask(parentTask);
-                        }
-                    }
                     savedTask = taskService.createTask(task);
                 }
 			}
