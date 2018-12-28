@@ -21,8 +21,18 @@
               </div> 
               <div >
                 <div class="input-group" *ngIf="showdate"> 
-                  <div class="col-md-5"><input id="startDate" class="form-control" type="date" formControlName="startDate" [ngClass]="{'is-invalid': submitted && addProjectForm.get('startDate').errors}" placeholder="StartDate"/></div>                                
-                  <div class="col-md-5"><input type="date" class="form-control" formControlName="endDate" [ngClass]="{'is-invalid': submitted && addProjectForm.get('endDate').errors}" placeholder="End Date"/></div>                
+                  <div class="col-md-5"><input id="startDate" class="form-control" type="date" formControlName="startDate" [ngClass]="{'is-invalid': submitted && addProjectForm.get('startDate').errors}" placeholder="StartDate"/>                                
+                  <span *ngIf="addProjectForm.get('startDate').errors" class="invalid-feedback">
+                    <span *ngIf="addProjectForm.get('startDate').errors.startDateRequired">
+                        Project Start Date is required  
+                      </span>
+                      <span *ngIf="addProjectForm.get('startDate').errors.startDateInvalid">
+                        Project Start Date should not greater than End Date 
+                      </span>
+                    </span>
+                  </div>
+
+                  <div class="col-md-5"><input type="date" class="form-control" formControlName="endDate" placeholder="End Date"/></div>                
                 </div>     
               </div>           
             </td>
@@ -46,9 +56,13 @@
           </tr>  
           <tr rowspan="2">
               <td colspan="2" class="text-center">
-                <span class="col-md-3">
+                <span class="col-md-3" *ngIf="isNewProject">
                   <input class="btn btn-primary" type="button" value="Add" (click)="addProject()"/>
                 </span>
+                <span class="col-md-3" *ngIf="!isNewProject">
+                    <input class="btn btn-primary" type="button" value="Update" (click)="addProject()"/>
+                  </span>
+  
                 <span class="col-md-3">
                   <input class="btn btn-info" type="button" value="Reset" (click)="resetForm()" />  
                 </span>

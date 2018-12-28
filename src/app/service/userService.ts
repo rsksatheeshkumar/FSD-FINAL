@@ -3,8 +3,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 
 import { User } from '../model/user-model';
 
-
-const endPoint = `http://localhost:8080/user/`;
+const endPoint = `http://localhost:8081/user/`;
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json'

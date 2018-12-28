@@ -66,7 +66,6 @@ export class AddTaskComponent implements OnInit {
     if(this.addTaskForm.valid)       
      {
      let addtask: Task = this.addTaskForm.value;
-     console.log("parentID = "+ addtask.parentTaskId);
       if(addtask.isparentTask == true)
       {
         let parentTask = new ParentTask(undefined , addtask.task);
@@ -75,6 +74,7 @@ export class AddTaskComponent implements OnInit {
             this.allParentTask.push(new ParentTask(parentTaskres["parentTaskId"], parentTaskres["parentTask"]));
             localStorage.setItem('parentTask',JSON.stringify(this.allParentTask));
             this.addTaskForm.patchValue(this.allParentTask);
+            this.resetForm();
             this.toastrManager.successToastr("Task "+parentTaskres["parentTask"] + " Added successfully");
           },
           error => {
@@ -114,6 +114,7 @@ export class AddTaskComponent implements OnInit {
       userName: ['',Validators.required],
       parentTaskName: ['',Validators.required]
     })
+    this.disableChildTask = false;
    }
   
     getParentTask()

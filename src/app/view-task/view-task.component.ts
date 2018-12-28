@@ -5,7 +5,9 @@ import { ToastrManager } from 'ng6-toastr-notifications';
 
 
 import { TaskService } from '../service/taskService';
+import { ProjectService } from '../service/projectService';
 import { Task , ParentTask } from '../model/task-model';
+import { Project } from '../model/project-model';
 
 @Component({
   selector: 'app-view-task',
@@ -15,10 +17,13 @@ import { Task , ParentTask } from '../model/task-model';
 export class ViewTaskComponent implements OnInit {
   allTasks: Task[] = [];
   allParentTask: Array<ParentTask> =new Array<ParentTask>();
+  projectList: Array<Project> = new Array<Project>();
   viewTaskForm: FormGroup;
-  public taskDesc: string;
+  public projectName: string;
+  selectedProject: Project;
   constructor(
     private taskService: TaskService,
+    private projectService: ProjectService,
     private router: Router,
     private formBuilder: FormBuilder,
     private toastrManager: ToastrManager
@@ -30,15 +35,24 @@ export class ViewTaskComponent implements OnInit {
       taskDesc: new FormControl()
     })
     this.getParentTask();
+    this.getAllProject();
     this.refreshData();
   }
 
   refreshData()
   {
-    this.taskService.getAllTask().subscribe(tasks =>
-      {
-        this.allTasks = tasks;
-      })
+    if(this.selectedProject)
+    {
+      this.taskService.getTaskByProjectId(this.selectedProject.projectId).subscribe(tasks =>
+        {
+          this.allTasks = tasks;
+        })  
+    }else{
+      this.taskService.getAllTask().subscribe(tasks =>
+        {
+          this.allTasks = tasks;
+        })  
+    }
   }
 
   updateTask(taskId){        
@@ -67,5 +81,74 @@ export class ViewTaskComponent implements OnInit {
     {
       this.allParentTask.push(new ParentTask(parentTask["parentTaskId"], parentTask["parentTask"]));
     }
+  }
+
+  getAllProject()
+    {
+      this.projectService.getAllProjects().subscribe(projects =>
+        {
+          this.projectList = projects;
+        })
+    }
+
+  handleSelectedProjectEvent(_event)
+  {
+    this.selectedProject =_event;
+    if(this.selectedProject)
+    {
+      this.projectName = this.selectedProject.projectName;
+      this.taskService.getTaskByProjectId(this.selectedProject.projectId).subscribe(tasks =>
+        {
+          this.allTasks = tasks;
+        })
+    }
+  }
+
+  sortByStartDate()
+  {
+    this.allTasks = this.allTasks.sort(function(task1, task2)
+    {
+      if(new Date(task1.startDate).getTime() < new Date(task2.startDate).getTime())
+      {
+        return -1;
+      }
+      return 0;         
+    })
+  }
+
+  sortByEndDate()
+  {
+    this.allTasks = this.allTasks.sort(function(task1, task2)
+    {
+      if(new Date(task1.endDate).getTime() < new Date(task2.endDate).getTime())
+      {
+        return -1;
+      }
+      return 0;         
+    })
+  }
+
+  sortByPriority()
+  {
+    this.allTasks = this.allTasks.sort(function(task1, task2)
+    {
+      if(task1.priority < task2.priority)
+      {
+        return -1;
+      }
+      return 0;         
+    })
+  }
+
+  sortByCompleted()
+  {
+    this.allTasks = this.allTasks.sort(function(task1, task2)
+    {
+      if(new Date(task1.endDate).getTime() > new Date(task2.endDate).getTime())
+      {
+        return -1;
+      }
+      return 0;         
+    })
   }
 }

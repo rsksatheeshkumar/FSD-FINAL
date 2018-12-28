@@ -24,4 +24,5 @@ export class Task {
     parentTask: ParentTask;
     project: Project;
     user: User;
+    projectId: number;
 }

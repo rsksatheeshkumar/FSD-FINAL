@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Task, ParentTask } from '../model/task-model';
 
 
-const endPoint = `http://localhost:8080/task/`;
+const endPoint = `http://localhost:8081/task/`;
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json'
@@ -42,7 +42,11 @@ export class TaskService {
   {
     return this.http.get<Task[]>(endPoint+'getAllTask');
   }
-
+  getTaskByProjectId(projectId)
+  {
+    return this.http.get<Task[]>(endPoint+'getTaskByProjectId/'+projectId);
+  }
+  
   getAllParentTask()
   {
     return this.http.get<ParentTask[]>(endPoint+'getAllParentTask');

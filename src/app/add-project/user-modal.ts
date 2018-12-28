@@ -17,7 +17,6 @@ export class NgbdModalBasic {
     ) {}
 
   open(content) {
-    console.log(content);
     this.modalService.open(content, {ariaLabelledBy: 'modal-search-user', size: 'lg'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -27,7 +26,6 @@ export class NgbdModalBasic {
 
   select(user : User)
   {
-console.log("Colse modal *"+user.firstName);
 this.selectedUserEvent.emit(user);
 this.modalService.dismissAll();
   }

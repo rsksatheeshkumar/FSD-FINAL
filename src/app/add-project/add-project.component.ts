@@ -22,7 +22,8 @@ export class AddProjectComponent implements OnInit {
   searchProjectList: Project[] = [];
   selectedUser: User;
   showdate: boolean = false;
-  userList: User[]=[]
+  userList: User[]=[];
+  isNewProject: boolean;
   constructor(
     private formBuilder: FormBuilder,
     private projectService: ProjectService,
@@ -36,16 +37,20 @@ export class AddProjectComponent implements OnInit {
       projectId: [''],    
       projectName: ['',Validators.required],
       isDateRequired: [false],
-      startDate: [''],
+      startDate: ['' , projectDateValidator],
       endDate: [''],
       priority: [0],
       managerName: [''],
       searchKey: [''],
     })
-
+    this.isNewProject = true;
     this.initializeProject();
     this.addProjectForm.get('searchKey').valueChanges.subscribe(value => {
       this.searchProjectList = this.projectSearchPipe.transform(this.allProjectList ,value)
+    });
+
+    this.addProjectForm.get('endDate').valueChanges.subscribe(value => {
+      this.addProjectForm.get('startDate').updateValueAndValidity()
     });
 
   }
@@ -87,24 +92,21 @@ export class AddProjectComponent implements OnInit {
   }
   handleSelectedUserEvent(_event)
   {
-    console.log("Handle Event"+_event);
     this.selectedUser =_event;
-    console.log(this.selectedUser.firstName);
     this.addProjectForm.get('managerName').patchValue(this.selectedUser.firstName);
     this.submitted = false;
   }
 
   addProject()
   {
-    console.log("Add Project submit");
     this.submitted = true;
-    this.addProjectForm.markAsTouched;    
+    this.addProjectForm.markAsTouched;
+    console.log(JSON.stringify(this.addProjectForm.get('startDate').errors));
     if(this.addProjectForm.valid)       
      {
         let addProject: Project = this.addProjectForm.value;
         addProject.manager = this.selectedUser;
-        addProject.completed = false;
-        console.log("addproject"+addProject.projectName);
+        addProject.completed = false;        
         if(addProject.projectId)
         {
           this.projectService.updateProject(addProject).subscribe(projectRes =>       
@@ -141,7 +143,7 @@ export class AddProjectComponent implements OnInit {
       projectId: [project.projectId],
       projectName: [project.projectName, Validators.required],
       isDateRequired: [false],
-      startDate: [project.startDate],
+      startDate: [project.startDate, projectDateValidator],
       endDate: [project.endDate],
       priority: [project.priority],
       managerName: [project.manager.firstName],
@@ -153,6 +155,7 @@ export class AddProjectComponent implements OnInit {
       this.showdate = true;
       this.addProjectForm.get('isDateRequired').patchValue(true);
     }
+    this.isNewProject =false;
   }
 
   suspendProject(projectId: number)
@@ -161,7 +164,6 @@ export class AddProjectComponent implements OnInit {
     {
       this.projectService.suspendProject(projectId).subscribe(projectRes =>       
         {
-          console.log("Sus res ="+projectRes);
           this.updateProjectList(projectRes);
           this.resetForm();
           this.toastrManager.successToastr("Project suspended successfully");
@@ -178,7 +180,7 @@ export class AddProjectComponent implements OnInit {
       projectName: ['',Validators.required],
       isDateRequired: [false],
       startDate: [''],
-      endDate: [''],
+      endDate: ['', projectDateValidator],
       priority: [0],
       managerName: [''],
       searchKey: [''],
@@ -186,6 +188,7 @@ export class AddProjectComponent implements OnInit {
     this.submitted = false;  
     this.searchProjectList = this.allProjectList; 
     this.showdate = false;
+    this.isNewProject = true;
 
   }
 
@@ -227,9 +230,10 @@ export class AddProjectComponent implements OnInit {
     if(isRequired)
     {
       this.showdate = true;
-      let now = new Date().toJSON().slice(0,10).replace(/-/g,'/')
-      this.addProjectForm.get('startDate').patchValue(now);
-      this.addProjectForm.get('endDate').setValue(now);
+      let today = new Date();
+      let tomorrow = new Date(today.getTime()+(1000*60*60*24));        
+      this.addProjectForm.get('startDate').patchValue(today.toISOString().substring(0,10));      
+      this.addProjectForm.get('endDate').patchValue(tomorrow.toISOString().substring(0,10));
     }else{
       this.showdate = false;
       this.addProjectForm.get('startDate').patchValue('');
@@ -277,7 +281,7 @@ export class AddProjectComponent implements OnInit {
   {
     this.searchProjectList = this.searchProjectList.sort(function(project1, project2)
     {
-      if(project1.completed > project2.completed)
+      if(project1.completedTask < project2.completedTask)
       {
         return -1;
       }

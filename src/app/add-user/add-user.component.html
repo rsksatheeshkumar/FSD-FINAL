@@ -40,8 +40,11 @@
     </tr>
     <tr rowspan="2">
         <td colspan="2" class="text-center">
-            <span class="col-md-3">
-                <input class="btn btn-primary" type="submit" value="Submit" />
+            <span class="col-md-3" *ngIf="isNewUser">
+                <input class="btn btn-primary" type="submit" value="Add" />
+            </span>
+            <span class="col-md-3" *ngIf="!isNewUser">
+                <input class="btn btn-primary" type="submit" value="Update" />
             </span>
             <span class="col-md-3">
                 <input class="btn btn-info" type="button" value="Reset" (click)="resetForm()" />  

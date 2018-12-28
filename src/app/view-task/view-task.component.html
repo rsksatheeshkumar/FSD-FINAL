@@ -2,31 +2,29 @@
     <h4 style="text-align: center">View Task</h4>
 </div>
 <section class="search-section">
-        <table class="table">
-                <tr>
-                    <td><strong> task: </strong></td>
-                    <td colspan="2"><input type="text"  [(ngModel)]="taskDesc" ></td>
-                    <td><strong> ParentTask:</strong></td>
-                    <td colspan="2">
-                        <select [(ngModel)]="parentTask" >
-                            <option value='-1'>&nbsp;</option>
-                            <option *ngFor="let ptask of allParentTask" >
-                                {{ptask.parentTask}}
-                            </option>
-                            </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>Priority From:</strong></td>
-                    <td><input type="text"  [(ngModel)]="priorityFrom" ></td>
-                    <td><strong>Priority To :</strong></td>
-                    <td><input type="text" [(ngModel)]="priorityTo"></td>
-                    <td><strong>Start Date:</strong></td>
-                    <td><input type="date" [(ngModel)]="startDate"></td>
-                    <td><strong>End Date:</strong></td>
-                    <td><input type="date" [(ngModel)]="endDate"></td>
-                </tr>
-            </table> 
+            <div >
+
+                <span class="col-md-6">
+                    <label for="projectName">Project</label>
+                    <input id="projectName" type="text" [(ngModel)]="projectName"  readonly/>
+                    <span class="input-group-btn col-md-2" ><ngbd-modal-project [allProject]="projectList" (selectedProjectEvent) = "handleSelectedProjectEvent($event)"></ngbd-modal-project></span>                  
+                </span>
+                <span class="col-md-3">
+                    <label>Sort Task By:</label>
+                    <span class="col-md-2">
+                        <input id ="sortBy" class="btn btn-info" type="button" value="Start Date" (click)="sortByStartDate()"/>
+                    </span>
+                    <span class="col-md-2">
+                    <input class="btn btn-info " type="button" value="End Date" (click)="sortByEndDate()"/>
+                    </span>
+                    <span class="col-md-2">
+                    <input class="btn btn-info" type="button" value="Priority" (click)="sortByPriority()"/>  
+                    </span>
+                    <span class="col-md-2">
+                    <input class="btn btn-info" type="button" value="Completed" (click)="sortByCompleted()"/>  
+                    </span>
+                </span>
+            </div>
 </section>
 <div class="center">
     <h4 style="text-align: center">Search Result</h4>
@@ -45,7 +43,7 @@
       <th></th>
   </tr>
 </thead>
-<tr *ngFor="let task of allTasks | taskSearch :taskDesc :parentTask :priorityFrom :priorityTo :startDate :endDate">
+<tr *ngFor="let task of allTasks">
   <td >{{task.task}} </td>
 
   <ng-container *ngIf="task.parentTask != null else elseTemplate" filter >

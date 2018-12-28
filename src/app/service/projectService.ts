@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Project } from '../model/project-model';
 
 
-const endPoint = `http://localhost:8080/project/`;
+const endPoint = `http://localhost:8081/project/`;
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json'

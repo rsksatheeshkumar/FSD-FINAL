@@ -17,6 +17,7 @@ export class AddUserComponent implements OnInit {
   submitted = false;
   searchUsers: User[] = [];
   deleteUserId: number;
+  isNewUser: boolean;
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
@@ -38,6 +39,7 @@ export class AddUserComponent implements OnInit {
     this.addUserForm.get('searchKey').valueChanges.subscribe(value => {
       this.searchUsers = this.userSearchPipe.transform(this.userList ,value)
     });
+    this.isNewUser= true;
   }
 
   loadUser()
@@ -95,6 +97,8 @@ export class AddUserComponent implements OnInit {
     this.submitted = false;  
     this.searchUsers = this.userList; 
     this.deleteUserId = -1;
+    this.isNewUser = true;
+
    }
 
    editUser(user: User)
@@ -106,6 +110,7 @@ export class AddUserComponent implements OnInit {
       empId: [user.empId,Validators.required],
       searchKey: ['']
     })
+    this.isNewUser =false;
    }
    deleteUser(userId: number)
    {
@@ -134,11 +139,9 @@ export class AddUserComponent implements OnInit {
 
   removeDeletedUser(userId: number )
     {
-      console.log("Remove delete user "+userId)
       if(userId != -1)
       {
         let userIndex = this.userList.findIndex(user => user.userId == userId);
-        console.log("userIndex "+userIndex);
         if(userIndex != -1)
         {
           this.userList.splice(userIndex,1);  
